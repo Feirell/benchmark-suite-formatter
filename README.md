@@ -2,6 +2,15 @@
 
 This packge can be used to format the state / result of a suite from the [benchmark](https://www.npmjs.com/package/benchmark) package.
 
+Example output:
+
+```text
+copy an array
+                  name   ops/sec variance samples
+          array splice 8,064,372     0.74      94
+json stringify + parse 1,459,270      0.4      93
+```
+
 ```js
 const RFormatter = require("benchmark-suite-formatter");
 const Benchmark = require('benchmark');
