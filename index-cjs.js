@@ -45,17 +45,29 @@ function createTableLikeOutput(columnNames, rows) {
 const integerFormatter = Intl.NumberFormat('en-US', {
     maximumFractionDigits: 0
 });
+
 const floatFormatter = Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2
 });
+
+function formatNumber(type, number) {
+    if (number == 0)
+        return '';
+
+    if (type == 'float')
+        return floatFormatter.format(number);
+
+    if (type == 'integer')
+        return integerFormatter.format(number);
+}
 
 function stringifySuite(suite) {
     return createTableLikeOutput(['name', 'ops/sec', 'variance', 'samples'], suite.map(
         benchmark => [
             '' + benchmark.name,
-            '' + integerFormatter.format(benchmark.hz),
-            '' + floatFormatter.format(benchmark.stats.rme),
-            '' + integerFormatter.format(benchmark.stats.sample.length)
+            '' + formatNumber('integer', benchmark.hz),
+            '' + formatNumber('float', benchmark.stats.rme),
+            '' + formatNumber('integer', benchmark.stats.sample.length)
         ]
     ));
 }
