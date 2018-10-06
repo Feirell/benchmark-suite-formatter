@@ -1,5 +1,8 @@
 # Benchmark Suite Formatter
 
+[![npm](https://img.shields.io/npm/v/benchmark-suite-formatter.svg)](https://www.npmjs.com/package/benchmark-suite-formatter)
+[![GitHub issues](https://img.shields.io/github/issues/Feirell/benchmark-suite-formatter.svg)](https://github.com/Feirell/benchmark-suite-formatter/issues)
+
 This packge can be used to format the state / result of a suite from the [benchmark](https://www.npmjs.com/package/benchmark) package.
 
 Example output:
