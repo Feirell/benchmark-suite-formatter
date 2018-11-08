@@ -63,11 +63,11 @@ function formatNumber(type: string, number: number) {
  * @param suite 
  */
 function stringifySuite(suite: any): string {
-    return createTableLikeOutput(['name', 'ops/sec', 'margin of error', 'samples'], suite.map(
+    return createTableLikeOutput(['name', 'ops/sec', 'MoE', 'samples'], suite.map(
         (benchmark: any) => [
             '' + benchmark.name,
             '' + formatNumber('integer', benchmark.hz),
-            '±' + formatNumber('float', benchmark.stats.rme) + '%',
+            benchmark.stats.rme == 0 ? '' : ('± ' + formatNumber('float', benchmark.stats.rme) + '%'),
             '' + formatNumber('integer', benchmark.stats.sample.length)
         ]
     ));
