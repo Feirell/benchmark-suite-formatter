@@ -1,21 +1,25 @@
 {
-  "name": "benchmark-suite-formatter",
-  "version": "1.0.1",
-  "description": "Formats the state / result of a test suite provided by the 'benchmark' package.",
-  "main": "index-cjs.js",
-  "module": "index-esm.js",
-  "repository": "https://github.com/Feirell/benchmark-suite-formatter.git",
-  "author": "Florian Völker <Neirolf2030@web.de>",
-  "license": "MIT",
-  "private": false,
-  "scripts": {
-    "rollup": "rollup --format=cjs --file=index-cjs.js -- index-esm.js"
-  },
-  "files": ["index-cjs.js", "index-esm.js"],
-  "peerDependencies": {
-    "benchmark": "^2.1.4"
-  },
-  "devDependencies": {
-    "rollup": "^0.66.4"
-  }
+    "name": "benchmark-suite-formatter",
+    "version": "1.0.2",
+    "description": "Formats the state / result of a test suite provided by the 'benchmark' package.",
+    "main": "index-cjs.js",
+    "module": "index-esm.js",
+    "repository": "https://github.com/Feirell/benchmark-suite-formatter.git",
+    "author": "Florian Völker <Neirolf2030@web.de>",
+    "license": "MIT",
+    "scripts": {
+        "cjs": "tsc -p tsconfig-node.json",
+        "esm": "tsc -p tsconfig-web.json",
+        "build": "npm run cjs && npm run esm"
+    },
+    "files": [
+        "cjs",
+        "esm"
+    ],
+    "peerDependencies": {
+        "benchmark": "^2.1.4"
+    },
+    "devDependencies": {
+        "typescript": "^3.1.6"
+    }
 }

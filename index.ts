@@ -1,8 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function createTableLikeOutput(columnNames, rows) {
+function createTableLikeOutput(columnNames: string[], rows: string[][]): string {
     const maxSizeColumns = columnNames.map(n => n.length);
     const columns = columnNames.length;
 
@@ -50,7 +46,7 @@ const floatFormatter = Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2
 });
 
-function formatNumber(type, number) {
+function formatNumber(type: string, number: number) {
     if (number == 0)
         return '';
 
@@ -61,15 +57,22 @@ function formatNumber(type, number) {
         return integerFormatter.format(number);
 }
 
-function stringifySuite(suite) {
-    return createTableLikeOutput(['name', 'ops/sec', 'variance', 'samples'], suite.map(
-        benchmark => [
+/**
+ * Converts a given `Suite` of the [benchmark](https://www.npmjs.com/package/benchmark) package into a table.
+ * 
+ * @param suite 
+ */
+function stringifySuite(suite: any): string {
+    return createTableLikeOutput(['name', 'ops/sec', 'margin of error', 'samples'], suite.map(
+        (benchmark: any) => [
             '' + benchmark.name,
             '' + formatNumber('integer', benchmark.hz),
-            '' + formatNumber('float', benchmark.stats.rme),
+            '±' + formatNumber('float', benchmark.stats.rme) + '%',
             '' + formatNumber('integer', benchmark.stats.sample.length)
         ]
     ));
 }
 
-exports.stringifySuite = stringifySuite;
+export {
+    stringifySuite
+};
