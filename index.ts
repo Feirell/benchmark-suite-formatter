@@ -1,41 +1,32 @@
-function createTableLikeOutput(columnNames: string[], rows: string[][]): string {
-    const maxSizeColumns = columnNames.map(n => n.length);
-    const columns = columnNames.length;
+const columnLength = (arr: any[][]): number => {
+    const columlength = arr[0].length;
+    for (let row of arr)
+        if (row.length != columlength)
+            return -1;
 
-    for (let r = 0; r < rows.length; r++) {
-        const row = rows[r];
+    return columlength;
+}
 
-        if (columns < row.length)
-            throw new Error("row " + r + " has more columns than defined in columnNames");
+function formatTableLike(rows: string[][]): string {
+    const columnCount = columnLength(rows);
 
-        for (let c = 0; c < columns; c++)
-            if (maxSizeColumns[c] < row[c].length)
-                maxSizeColumns[c] = row[c].length;
-    }
+    if (columnCount == -1)
+        throw new RangeError('rows needs to be a uniform 2d array');
 
-    let str = "";
-    for (let c = 0; c < columns; c++) {
-        str += columnNames[c].padStart(maxSizeColumns[c], ' ');
+    const maxSizeColum = new Array(columnCount).fill(0);
 
-        if (c != columns - 1)
-            str += " ";
-    }
+    for (let row of rows)
+        for (let i = 0; i < columnCount; i++)
+            if (row[i].length > maxSizeColum[i])
+                maxSizeColum[i] = row[i].length;
 
-    str += '\n';
+    const stringRows = rows.map(row =>
+        row.map((item, index) =>
+            item.padStart(maxSizeColum[index], ' ')
+        ).join(' ')
+    ).join('\n');
 
-    for (let r = 0; r < rows.length; r++) {
-        const row = rows[r];
-        for (let c = 0; c < columns; c++) {
-            str += row[c].padStart(maxSizeColumns[c], ' ');
-            if (c != columns - 1)
-                str += " ";
-        }
-
-        if (r != rows.length - 1)
-            str += '\n';
-    }
-
-    return str;
+    return stringRows;
 }
 
 const integerFormatter = Intl.NumberFormat('en-US', {
@@ -46,31 +37,43 @@ const floatFormatter = Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2
 });
 
-function formatNumber(type: string, number: number) {
-    if (number == 0)
-        return '';
+const formatFloat = floatFormatter.format;
+const formatInteger = integerFormatter.format;
 
-    if (type == 'float')
-        return floatFormatter.format(number);
+const formatPercentage = (n: number) => formatFloat(n) + '%';
+const formatMoE = (n: number) => '± ' + formatPercentage(n);
 
-    if (type == 'integer')
-        return integerFormatter.format(number);
-}
+const formatNone = (val: any) => '' + val;
+
+const formatFunctions: ((v: any) => string)[] = [formatNone, formatInteger, formatMoE, formatInteger, formatFloat];
 
 /**
  * Converts a given `Suite` of the [benchmark](https://www.npmjs.com/package/benchmark) package into a table.
  * 
  * @param suite 
  */
-function stringifySuite(suite: any): string {
-    return createTableLikeOutput(['name', 'ops/sec', 'MoE', 'samples'], suite.map(
+function stringifySuite(suite: any, addName = true, addRelativ = true): string {
+    const raw: [string, number, number, number, number][] = suite.map(
         (benchmark: any) => [
-            '' + benchmark.name,
-            '' + formatNumber('integer', benchmark.hz),
-            benchmark.stats.rme == 0 ? '' : ('± ' + formatNumber('float', benchmark.stats.rme) + '%'),
-            '' + formatNumber('integer', benchmark.stats.sample.length)
+            benchmark.name,
+            benchmark.hz,
+            benchmark.stats.rme,
+            benchmark.stats.sample.length
         ]
-    ));
+    );
+
+    let min: number;
+    if (addRelativ)
+        min = raw.reduce((p, v) => v[1] < p ? v[1] : p, raw[0][1]);
+
+    const formattedRows = raw.map(data => {
+        if (addRelativ)
+            data[4] = min == 0 ? 0 : data[1] / min;
+
+        return data.map((r, i) => r == 0 ? '' : formatFunctions[i](r));
+    })
+
+    return (addName ? suite.name + '\n' : '') + formatTableLike([['name', 'ops/sec', 'MoE', 'samples', 'relativ']].concat(formattedRows));
 }
 
 export {
