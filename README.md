@@ -21,7 +21,7 @@ const Benchmark = require('benchmark');
 
 function printStatus(suite) {
     console.clear();
-    console.log('copy an array\n\n' + RFormatter.stringifySuite(suite));
+    console.log('copy an array\n\n' + RFormatter.stringifySuite(suite, false, false));
 }
 
 const someArray = new Array(100);
@@ -55,9 +55,9 @@ printStatus(suite);
 
 ## API
 
-### `stringifySuite(suite: Suite, addName = true, addRelativ = true): string`
+### `stringifySuite(suite: Suite, addName = true, addRelative = true): string`
 
-This function provides you an easy to use way to stringify a Suite of the [benchmark](https://www.npmjs.com/package/benchmark) package. It will return an string as the one shown above in the example. The tablelike output will have 4 or 5 columns depending on the third parameter. The second parameter gives you the option to hide the name of the suite.
+This function provides you an easy to use way to stringify a Suite of the [benchmark](https://www.npmjs.com/package/benchmark) package. It will return an string as the one shown above in the example. The tablelike output will have 4 or 5 columns depending on the third parameter. The second parameter gives you the option to hide display the name of the suite.
 
 The colums:
 
@@ -65,4 +65,4 @@ The colums:
 - [`ops/sec`](https://benchmarkjs.com/docs#prototype_hz) the number of executions per second.
 - [`MoE`](https://benchmarkjs.com/docs#stats_rme) the relative margin of error (expressed as a percentage of the mean).
 - [`samples`](https://benchmarkjs.com/docs#stats_sample) The number of sampled periods.
-- [`relativ`] The relativ `ops/sec` to the slowest benchmark (2 => two times faster, 1 => as fast as the slowest).
+- [`relative`] The relative `ops/sec` to the slowest benchmark (2 => two times faster, 1 => as fast as the slowest).

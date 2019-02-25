@@ -1,6 +1,6 @@
 {
     "name": "benchmark-suite-formatter",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "Formats the state / result of a test suite provided by the 'benchmark' package.",
     "main": "./cjs/index.js",
     "module": "./esm/index.js",

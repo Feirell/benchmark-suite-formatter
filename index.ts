@@ -52,7 +52,7 @@ const formatFunctions: ((v: any) => string)[] = [formatNone, formatInteger, form
  * 
  * @param suite 
  */
-function stringifySuite(suite: any, addName = true, addRelativ = true): string {
+function stringifySuite(suite: any, addName = true, addRelative = true): string {
     const raw: [string, number, number, number, number][] = suite.map(
         (benchmark: any) => [
             benchmark.name,
@@ -63,18 +63,18 @@ function stringifySuite(suite: any, addName = true, addRelativ = true): string {
     );
 
     let min: number;
-    if (addRelativ)
+    if (addRelative)
         min = raw.reduce((p, v) => v[1] < p ? v[1] : p, raw[0][1]);
 
     const formattedRows = raw.map(data => {
-        if (addRelativ)
+        if (addRelative)
             data[4] = min == 0 ? 0 : data[1] / min;
 
         return data.map((r, i) => r == 0 ? '' : formatFunctions[i](r));
     })
 
     const columnnames = ['name', 'ops/sec', 'MoE', 'samples'];
-    if (addRelativ) columnnames[4] = "relativ";
+    if (addRelative) columnnames[4] = "relative";
 
     return (addName ? (suite.name || "<unnamed suite>") + '\n' : '') + formatTableLike([columnnames].concat(formattedRows));
 }
