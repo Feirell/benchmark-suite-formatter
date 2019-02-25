@@ -73,7 +73,10 @@ function stringifySuite(suite: any, addName = true, addRelativ = true): string {
         return data.map((r, i) => r == 0 ? '' : formatFunctions[i](r));
     })
 
-    return (addName ? suite.name + '\n' : '') + formatTableLike([['name', 'ops/sec', 'MoE', 'samples', 'relativ']].concat(formattedRows));
+    const columnnames = ['name', 'ops/sec', 'MoE', 'samples'];
+    if (addRelativ) columnnames[4] = "relativ";
+
+    return (addName ? (suite.name || "<unnamed suite>") + '\n' : '') + formatTableLike([columnnames].concat(formattedRows));
 }
 
 export {
